@@ -49,6 +49,7 @@
     "auth:generate": "cd apps/server && bun run auth:generate"
   },
   "dependencies": {
+    "lucide-react": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

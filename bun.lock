@@ -5,6 +5,7 @@
     "": {
       "name": "web-socket-web-rtc",
       "dependencies": {
+        "lucide-react": "catalog:",
         "zod": "catalog:",
       },
       "devDependencies": {

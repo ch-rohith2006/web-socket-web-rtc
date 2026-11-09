@@ -1,10 +1,10 @@
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "../index.css";
-import Header from "@/components/header";
+import Sidebar from "@/components/Sidebar";
 import Providers from "@/components/providers";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "web-socket-web-rtc",
-  description: "web-socket-web-rtc",
+  title: "WebSocket WebRTC",
+  description: "WebSocket WebRTC Application",
 };
 
 export default function RootLayout({
@@ -26,14 +26,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Providers>
-          <div className="grid grid-rows-[auto_1fr] h-svh">
-            <Header />
-            {children}
-          </div>
-        </Providers>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+      <Providers>
+  <div className="flex h-screen w-full overflow-hidden">
+    <Sidebar />
+    <main className="flex-1 min-w-0 overflow-y-auto">
+      {children}
+    </main>
+  </div>
+</Providers>
       </body>
     </html>
   );
