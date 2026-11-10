@@ -276,67 +276,9 @@ export default function CoursesPage() {
 
       </section>
 
-      {/* ================= STATISTICS ================= */}
+    
 
-      <section className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
 
-        <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
-            <BookOpen size={22} />
-          </div>
-
-          <h2 className="text-2xl font-bold text-slate-900">
-            {courses.length}
-          </h2>
-
-          <p className="mt-1 text-sm text-slate-500">
-            Available Courses
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
-            <Layers size={22} />
-          </div>
-
-          <h2 className="text-2xl font-bold text-slate-900">
-            {categories.length - 1}
-          </h2>
-
-          <p className="mt-1 text-sm text-slate-500">
-            Learning Categories
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600">
-            <Users size={22} />
-          </div>
-
-          <h2 className="text-2xl font-bold text-slate-900">
-            6.5K+
-          </h2>
-
-          <p className="mt-1 text-sm text-slate-500">
-            Student Enrollments
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-amber-100 text-amber-600">
-            <Award size={22} />
-          </div>
-
-          <h2 className="text-2xl font-bold text-slate-900">
-            4.8/5
-          </h2>
-
-          <p className="mt-1 text-sm text-slate-500">
-            Average Course Rating
-          </p>
-        </div>
-
-      </section>
 
       {/* ================= COURSE CATALOG ================= */}
 
@@ -529,37 +471,7 @@ export default function CoursesPage() {
 
       </section>
 
-      {/* ================= BOTTOM BANNER ================= */}
-
-      <section className="mb-6 flex flex-col justify-between gap-4 rounded-2xl border border-blue-100 bg-blue-50 p-5 sm:flex-row sm:items-center md:p-6">
-
-        <div className="flex items-center gap-4">
-
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
-            <GraduationCap size={27} />
-          </div>
-
-          <div>
-            <h2 className="font-bold text-slate-900">
-              Start Your Learning Journey Today!
-            </h2>
-
-            <p className="mt-1 text-sm text-slate-500">
-              Explore our courses and build your future with new skills.
-            </p>
-          </div>
-
-        </div>
-
-        <Link
-          href="/my-learning"
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
-        >
-          My Learning
-          <ArrowRight size={17} />
-        </Link>
-
-      </section>
+   
 
       {/* ================= FOOTER ================= */}
 

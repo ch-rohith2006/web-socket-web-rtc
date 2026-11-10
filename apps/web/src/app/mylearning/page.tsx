@@ -699,39 +699,7 @@ export default function MyLearningPage() {
 
       </section>
 
-      {/* ================= BOTTOM BANNER ================= */}
-
-      <section className="mb-6 flex flex-col justify-between gap-4 rounded-2xl border border-blue-100 bg-blue-50 p-5 sm:flex-row sm:items-center md:p-6">
-
-        <div className="flex items-center gap-4">
-
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
-            <GraduationCap size={27} />
-          </div>
-
-          <div>
-            <h2 className="font-bold text-slate-900">
-              Ready to learn something new?
-            </h2>
-
-            <p className="mt-1 text-sm text-slate-500">
-              Discover more courses and develop your skills.
-            </p>
-          </div>
-
-        </div>
-
-        <Link
-          href="/courses"
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
-        >
-          Browse Courses
-          <ArrowRight size={17} />
-        </Link>
-
-      </section>
-
-      {/* ================= FOOTER ================= */}
+{/* ================= FOOTER ================= */}
 
       <footer className="border-t border-slate-200 py-5 text-center text-xs text-slate-400">
         WebRTC Learning Platform © 2026. All rights reserved.

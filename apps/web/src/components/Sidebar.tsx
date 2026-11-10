@@ -6,7 +6,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 import {
-  
   LayoutDashboard,
   Video,
   UserRoundPen,
@@ -19,10 +18,11 @@ import {
   Bell,
   Zap,
   Menu,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 
 const navigation = [
- 
   {
     name: "Dashboard",
     href: "/dashboard",
@@ -117,12 +117,13 @@ export default function Sidebar() {
               </div>
             </div>
 
-            {/* Close Sidebar */}
+            {/* Collapse Sidebar */}
             <button
               type="button"
               onClick={toggleSidebar}
-              aria-label="Close sidebar"
-             title="Close sidebar"
+              aria-label="Collapse sidebar"
+              title="Collapse sidebar"
+              aria-expanded="true"
               className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
             >
               <Menu size={22} />
@@ -158,10 +159,8 @@ export default function Sidebar() {
 
         {navigation.map((item) => {
           const isActive =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname === item.href ||
-                pathname.startsWith(`${item.href}/`);
+            pathname === item.href ||
+            pathname.startsWith(`${item.href}/`);
 
           const Icon = item.icon;
 
@@ -189,6 +188,57 @@ export default function Sidebar() {
             </Link>
           );
         })}
+
+        {/* Login and Sign Up */}
+        <div className="my-4 border-t border-slate-800 pt-4">
+
+          {!isCollapsed && (
+            <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Account Access
+            </p>
+          )}
+
+          {/* Login */}
+          <Link
+            href="/login"
+            aria-current={pathname === "/login" ? "page" : undefined}
+            title={isCollapsed ? "Login" : undefined}
+            className={`mb-2 flex items-center rounded-lg py-3 text-sm font-medium transition-colors ${
+              isCollapsed
+                ? "justify-center px-2"
+                : "gap-3 px-3"
+            } ${
+              pathname === "/login"
+                ? "bg-blue-600 text-white"
+                : "text-slate-400 hover:bg-slate-800 hover:text-white"
+            }`}
+          >
+            <LogIn size={20} className="shrink-0" />
+
+            {!isCollapsed && <span>Login</span>}
+          </Link>
+
+          {/* Sign Up */}
+          <Link
+            href="/signup"
+            aria-current={pathname === "/signup" ? "page" : undefined}
+            title={isCollapsed ? "Sign Up" : undefined}
+            className={`flex items-center rounded-lg py-3 text-sm font-medium transition-colors ${
+              isCollapsed
+                ? "justify-center px-2"
+                : "gap-3 px-3"
+            } ${
+              pathname === "/signup"
+                ? "bg-blue-600 text-white"
+                : "text-slate-400 hover:bg-slate-800 hover:text-white"
+            }`}
+          >
+            <UserPlus size={20} className="shrink-0" />
+
+            {!isCollapsed && <span>Sign Up</span>}
+          </Link>
+
+        </div>
       </nav>
 
       {/* My Account - Fixed at Bottom */}
@@ -218,6 +268,7 @@ export default function Sidebar() {
           )}
         </button>
       </div>
+
     </aside>
   );
 }
