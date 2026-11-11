@@ -200,15 +200,15 @@ export default function Sidebar() {
 
           {/* Login */}
           <Link
-            href="/login"
-            aria-current={pathname === "/login" ? "page" : undefined}
+            href="/auth"
+            aria-current={pathname === "/auth" ? "page" : undefined}
             title={isCollapsed ? "Login" : undefined}
             className={`mb-2 flex items-center rounded-lg py-3 text-sm font-medium transition-colors ${
               isCollapsed
                 ? "justify-center px-2"
                 : "gap-3 px-3"
             } ${
-              pathname === "/login"
+              pathname === "/auth"
                 ? "bg-blue-600 text-white"
                 : "text-slate-400 hover:bg-slate-800 hover:text-white"
             }`}
@@ -220,15 +220,15 @@ export default function Sidebar() {
 
           {/* Sign Up */}
           <Link
-            href="/signup"
-            aria-current={pathname === "/signup" ? "page" : undefined}
+            href="/auth"
+            aria-current={pathname === "/auth" ? "page" : undefined}
             title={isCollapsed ? "Sign Up" : undefined}
             className={`flex items-center rounded-lg py-3 text-sm font-medium transition-colors ${
               isCollapsed
                 ? "justify-center px-2"
                 : "gap-3 px-3"
             } ${
-              pathname === "/signup"
+              pathname === "/auth"
                 ? "bg-blue-600 text-white"
                 : "text-slate-400 hover:bg-slate-800 hover:text-white"
             }`}
