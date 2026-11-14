@@ -11,6 +11,7 @@ export default function LoginForm() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState<"student" | "teacher">("student");
   const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,19 +29,45 @@ export default function LoginForm() {
     try {
       setLoading(true);
 
-      const { error } = await authClient.signIn.email({
+      const result = await authClient.signIn.email({
         email: email.trim(),
         password,
         rememberMe,
-        callbackURL: "/dashboard",
       });
 
-      if (error) {
-        setError(error.message || "Invalid email or password.");
+      if (result.error) {
+        setError(result.error.message || "Invalid email or password.");
         return;
       }
 
-      router.replace("/dashboard");
+      const session = await authClient.getSession();
+
+      if (session.error || !session.data?.user) {
+        setError("Unable to load your account. Please try again.");
+        return;
+      }
+
+      const role = (
+        session.data.user as typeof session.data.user & {
+          role?: string;
+        }
+      ).role;
+
+      if (role !== selectedRole) {
+        await authClient.signOut();
+
+        setError(
+          `This account is not registered as a ${selectedRole}. Please select the correct account type.`
+        );
+        return;
+      }
+
+      if (role === "teacher") {
+        router.replace("/teacher/dashboard");
+      } else {
+        router.replace("/dashboard");
+      }
+
       router.refresh();
     } catch {
       setError("Unable to login. Please try again.");
@@ -117,6 +144,38 @@ export default function LoginForm() {
           </div>
         </div>
 
+        <div>
+          <label className="mb-2 block text-sm font-semibold text-slate-700">
+            Login As
+          </label>
+
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => setSelectedRole("student")}
+              className={`rounded-xl border p-3 font-semibold transition ${
+                selectedRole === "student"
+                  ? "border-blue-600 bg-blue-50 text-blue-600"
+                  : "border-slate-300 text-slate-600 hover:border-blue-300"
+              }`}
+            >
+              Student
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setSelectedRole("teacher")}
+              className={`rounded-xl border p-3 font-semibold transition ${
+                selectedRole === "teacher"
+                  ? "border-blue-600 bg-blue-50 text-blue-600"
+                  : "border-slate-300 text-slate-600 hover:border-blue-300"
+              }`}
+            >
+              Teacher
+            </button>
+          </div>
+        </div>
+
         <label className="flex items-center gap-2 text-sm text-slate-600">
           <input
             type="checkbox"
@@ -145,7 +204,7 @@ export default function LoginForm() {
       <p className="mt-6 text-center text-sm text-slate-600">
         Don't have an account?{" "}
         <Link
-          href="/signup"
+          href="/auth"
           className="font-semibold text-blue-600 hover:text-blue-700"
         >
           Sign up

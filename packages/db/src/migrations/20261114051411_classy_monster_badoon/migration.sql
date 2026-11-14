@@ -1,0 +1,1 @@
+ALTER TABLE "user" ADD COLUMN "teacher_status" text DEFAULT 'none' NOT NULL;

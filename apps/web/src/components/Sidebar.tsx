@@ -19,8 +19,12 @@ import {
   Zap,
   Menu,
   LogIn,
+  LogOut,
   UserPlus,
 } from "lucide-react";
+
+import { authClient } from "@/lib/auth-client";
+import TeacherSidebar from "@/components/teacher/Sidebar";
 
 const navigation = [
   {
@@ -81,6 +85,52 @@ export default function Sidebar() {
 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+
+// Get current Better Auth session
+const { data: session, isPending } = authClient.useSession();
+
+// Get logged-in user's role
+const userRole = (
+  session?.user as unknown as { role?: string } | undefined
+)?.role;
+
+// Debugging: check the role returned by Better Auth
+console.log("[Sidebar] Session loading:", isPending);
+console.log("[Sidebar] Current user role:", userRole);
+
+// Normalize role
+const normalizedRole = userRole?.toLowerCase();
+
+// Display Teacher Sidebar for teachers
+if (!isPending && normalizedRole === "teacher") {
+  return <TeacherSidebar />;
+}
+
+
+  // Get logged-in user's information
+  const userName =
+    session?.user?.name?.trim() ||
+    session?.user?.email ||
+    "User";
+
+  const userEmail = session?.user?.email || "";
+
+  const userInitial = session
+    ? userName.charAt(0).toUpperCase()
+    : "U";
+
+  // Logout function
+  const handleLogout = async () => {
+    try {
+      await authClient.signOut();
+
+      router.push("/auth");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
   const toggleSidebar = () => {
     setIsCollapsed((previous) => !previous);
   };
@@ -131,7 +181,7 @@ export default function Sidebar() {
           </>
         )}
 
-        {/* Click Zap to Open Sidebar */}
+        {/* Open Collapsed Sidebar */}
         {isCollapsed && (
           <button
             type="button"
@@ -189,86 +239,115 @@ export default function Sidebar() {
           );
         })}
 
-        {/* Login and Sign Up */}
+        {/* Account Access */}
         <div className="my-4 border-t border-slate-800 pt-4">
-
           {!isCollapsed && (
             <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
               Account Access
             </p>
           )}
 
-          {/* Login */}
-          <Link
-            href="/auth"
-            aria-current={pathname === "/auth" ? "page" : undefined}
-            title={isCollapsed ? "Login" : undefined}
-            className={`mb-2 flex items-center rounded-lg py-3 text-sm font-medium transition-colors ${
-              isCollapsed
-                ? "justify-center px-2"
-                : "gap-3 px-3"
-            } ${
-              pathname === "/auth"
-                ? "bg-blue-600 text-white"
-                : "text-slate-400 hover:bg-slate-800 hover:text-white"
-            }`}
-          >
-            <LogIn size={20} className="shrink-0" />
+          {!isPending &&
+            (session ? (
+              /* Logged-in user: Logout */
+              <button
+                type="button"
+                onClick={handleLogout}
+                title={isCollapsed ? "Logout" : undefined}
+                className={`flex w-full items-center rounded-lg py-3 text-sm font-medium transition-colors ${
+                  isCollapsed
+                    ? "justify-center px-2"
+                    : "gap-3 px-3"
+                } text-slate-400 hover:bg-red-600 hover:text-white`}
+              >
+                <LogOut size={20} className="shrink-0" />
 
-            {!isCollapsed && <span>Login</span>}
-          </Link>
+                {!isCollapsed && <span>Logout</span>}
+              </button>
+            ) : (
+              /* Logged-out user: Login and Sign Up */
+              <>
+                <Link
+                  href="/auth"
+                  aria-current={
+                    pathname === "/auth" ? "page" : undefined
+                  }
+                  title={isCollapsed ? "Login" : undefined}
+                  className={`mb-2 flex items-center rounded-lg py-3 text-sm font-medium transition-colors ${
+                    isCollapsed
+                      ? "justify-center px-2"
+                      : "gap-3 px-3"
+                  } ${
+                    pathname === "/auth"
+                      ? "bg-blue-600 text-white"
+                      : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                  }`}
+                >
+                  <LogIn size={20} className="shrink-0" />
 
-          {/* Sign Up */}
-          <Link
-            href="/auth"
-            aria-current={pathname === "/auth" ? "page" : undefined}
-            title={isCollapsed ? "Sign Up" : undefined}
-            className={`flex items-center rounded-lg py-3 text-sm font-medium transition-colors ${
-              isCollapsed
-                ? "justify-center px-2"
-                : "gap-3 px-3"
-            } ${
-              pathname === "/auth"
-                ? "bg-blue-600 text-white"
-                : "text-slate-400 hover:bg-slate-800 hover:text-white"
-            }`}
-          >
-            <UserPlus size={20} className="shrink-0" />
+                  {!isCollapsed && <span>Login</span>}
+                </Link>
 
-            {!isCollapsed && <span>Sign Up</span>}
-          </Link>
+                <Link
+                  href="/auth"
+                  title={isCollapsed ? "Sign Up" : undefined}
+                  className={`flex items-center rounded-lg py-3 text-sm font-medium transition-colors ${
+                    isCollapsed
+                      ? "justify-center px-2"
+                      : "gap-3 px-3"
+                  } text-slate-400 hover:bg-slate-800 hover:text-white`}
+                >
+                  <UserPlus size={20} className="shrink-0" />
 
+                  {!isCollapsed && <span>Sign Up</span>}
+                </Link>
+              </>
+            ))}
         </div>
       </nav>
 
-      {/* My Account - Fixed at Bottom */}
+      {/* User Account - Fixed at Bottom */}
       <div className="shrink-0 border-t border-slate-800 p-3">
         <button
           type="button"
           onClick={() => router.push("/profile")}
-          title={isCollapsed ? "My Account" : undefined}
+          title={
+            isCollapsed
+              ? session
+                ? userName
+                : "My Account"
+              : undefined
+          }
           className={`flex w-full items-center rounded-lg p-2 text-left transition-colors hover:bg-slate-800 ${
             isCollapsed ? "justify-center" : "gap-3"
           }`}
         >
+          {/* User Profile Initial */}
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-500 font-semibold text-white">
-            U
+            {isPending ? "..." : userInitial}
           </div>
 
           {!isCollapsed && (
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-white">
-                My Account
+                {isPending
+                  ? "Loading..."
+                  : session
+                    ? userName
+                    : "My Account"}
               </p>
 
-              <p className="truncate text-xs text-slate-500">
-                Workspace Member
+              <p className="truncate text-xs text-slate-400">
+                {isPending
+                  ? "Checking session..."
+                  : session
+                    ? userEmail
+                    : "Workspace Member"}
               </p>
             </div>
           )}
         </button>
       </div>
-
     </aside>
   );
 }

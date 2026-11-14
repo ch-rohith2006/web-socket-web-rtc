@@ -1,0 +1,47 @@
+{
+  "type": "diff",
+  "version": "9",
+  "dialect": "postgres",
+  "id": "7d391616-afe0-4f19-955b-f35af4e4aae7",
+  "prevIds": [
+    "8f846ae2-0ed0-41b1-b6ba-6682d98d18ec"
+  ],
+  "footprints": [
+    {
+      "statementType": "add_column",
+      "statementTarget": [
+        "column",
+        "public",
+        "user",
+        "teacher_status"
+      ],
+      "writes": [
+        "s|col|public.user.teacher_status",
+        "n|col|public.user.teacher_status",
+        "e|col|public.user.teacher_status"
+      ],
+      "reads": [
+        "n|tbl|public.user",
+        "n|sch|public"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "user",
+        "name": "teacher_status",
+        "type": "text",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'none'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    }
+  ]
+}

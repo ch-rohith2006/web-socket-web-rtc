@@ -21,6 +21,22 @@ export function createAuth(
     }),
     trustedOrigins: [env.CORS_ORIGIN, ...desktopOrigins],
     emailAndPassword: { enabled: true },
+user: {
+  additionalFields: {
+    role: {
+      type: "string",
+      required: false,
+      defaultValue: "student",
+      input: false,
+    },
+      teacherStatus: {
+      type: "string",
+      required: false,
+      defaultValue: "none",
+      input: false,
+    },
+  },
+},
     secret: env.BETTER_AUTH_SECRET,
     baseURL: env.BETTER_AUTH_URL,
     advanced: {
