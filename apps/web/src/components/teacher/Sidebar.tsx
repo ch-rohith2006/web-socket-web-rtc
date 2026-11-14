@@ -43,7 +43,7 @@ const navigation = [
   },
   {
     name: "My Students",
-    href: "/teacher/students",
+    href: "/teacher/mystudents",
     icon: Users,
   },
   {
@@ -71,11 +71,7 @@ const navigation = [
     href: "/teacher/profile",
     icon: User,
   },
-  {
-    name: "Settings",
-    href: "/teacher/settings",
-    icon: Settings,
-  },
+ 
 ] as const;
 
 export default function TeacherSidebar() {

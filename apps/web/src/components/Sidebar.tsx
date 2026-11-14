@@ -101,11 +101,17 @@ console.log("[Sidebar] Current user role:", userRole);
 // Normalize role
 const normalizedRole = userRole?.toLowerCase();
 
-// Display Teacher Sidebar for teachers
-if (!isPending && normalizedRole === "teacher") {
-  return <TeacherSidebar />;
+const isTeacherRoute =
+  pathname === "/teacher" ||
+  pathname.startsWith("/teacher/");
+
+if (isPending) {
+  return null;
 }
 
+if (isTeacherRoute || normalizedRole === "teacher") {
+  return <TeacherSidebar />;
+}
 
   // Get logged-in user's information
   const userName =

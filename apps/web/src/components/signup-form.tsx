@@ -4,7 +4,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/utils/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 type AccountType = "student" | "teacher";
 
@@ -30,19 +30,16 @@ export default function SignupForm() {
     e.preventDefault();
     setError("");
 
-    // Validate full name
     if (!name.trim()) {
       setError("Please enter your full name.");
       return;
     }
 
-    // Validate email
     if (!email.trim()) {
       setError("Please enter your email address.");
       return;
     }
 
-    // Validate password
     if (password.length < 8) {
       setError("Password must contain at least 8 characters.");
       return;
@@ -56,13 +53,10 @@ export default function SignupForm() {
     try {
       setLoading(true);
 
-      // Send the selected account type to Better Auth.
-      // The backend must be configured to accept this additional field.
       const signupData = {
         name: name.trim(),
         email: email.trim().toLowerCase(),
         password,
-        accountType,
         callbackURL:
           accountType === "teacher"
             ? "/teacher-pending"
@@ -79,20 +73,16 @@ export default function SignupForm() {
         return;
       }
 
-      // Teacher registration
       if (accountType === "teacher") {
-        router.replace("/teacher-pending");
+     router.replace("/teacher-pending" as any);
         router.refresh();
         return;
       }
 
-      // Student registration
       router.replace("/dashboard");
       router.refresh();
-
     } catch (err) {
       console.error("Signup error:", err);
-
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -101,8 +91,6 @@ export default function SignupForm() {
 
   return (
     <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-lg">
-
-      {/* Header */}
       <div className="mb-8 text-center">
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600 text-2xl font-bold text-white">
           A
@@ -118,15 +106,12 @@ export default function SignupForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-
-        {/* Account Type */}
         <div>
           <label className="mb-2 block text-sm font-semibold text-slate-700">
             Account Type
           </label>
 
           <div className="grid grid-cols-2 gap-3">
-
             <button
               type="button"
               disabled={loading}
@@ -152,7 +137,6 @@ export default function SignupForm() {
             >
               Teacher
             </button>
-
           </div>
 
           {accountType === "teacher" && (
@@ -163,7 +147,6 @@ export default function SignupForm() {
           )}
         </div>
 
-        {/* Full Name */}
         <div>
           <label
             htmlFor="signup-name"
@@ -186,7 +169,6 @@ export default function SignupForm() {
           />
         </div>
 
-        {/* Email */}
         <div>
           <label
             htmlFor="signup-email"
@@ -209,7 +191,6 @@ export default function SignupForm() {
           />
         </div>
 
-        {/* Password */}
         <div>
           <label
             htmlFor="signup-password"
@@ -243,7 +224,6 @@ export default function SignupForm() {
           </div>
         </div>
 
-        {/* Confirm Password */}
         <div>
           <label
             htmlFor="signup-confirm-password"
@@ -279,7 +259,6 @@ export default function SignupForm() {
           </div>
         </div>
 
-        {/* Error Message */}
         {error && (
           <div
             role="alert"
@@ -289,7 +268,6 @@ export default function SignupForm() {
           </div>
         )}
 
-        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
@@ -301,13 +279,10 @@ export default function SignupForm() {
               ? "Register as Teacher"
               : "Create Account"}
         </button>
-
       </form>
 
-      {/* Login */}
       <p className="mt-6 text-center text-sm text-slate-600">
         Already have an account?{" "}
-
         <Link
           href="/auth"
           className="font-semibold text-blue-600 hover:text-blue-700"
@@ -315,7 +290,6 @@ export default function SignupForm() {
           Login
         </Link>
       </p>
-
     </div>
   );
 }
