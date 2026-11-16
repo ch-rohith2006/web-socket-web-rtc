@@ -19,7 +19,9 @@
     "@web-socket-web-rtc/auth": "workspace:*",
     "@web-socket-web-rtc/db": "workspace:*",
     "better-auth": "catalog:",
+    "drizzle-orm": "catalog:",
     "hono": "^4.13.7",
+    "ioredis": "^6.0.0",
     "varlock": "catalog:",
     "zod": "catalog:"
   },

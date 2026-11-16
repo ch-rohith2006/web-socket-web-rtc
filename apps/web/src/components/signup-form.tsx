@@ -53,18 +53,16 @@ export default function SignupForm() {
     try {
       setLoading(true);
 
-      const signupData = {
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        password,
-        callbackURL:
-          accountType === "teacher"
-            ? "/teacher-pending"
-            : "/dashboard",
-      };
-
       const { error: signupError } =
-        await authClient.signUp.email(signupData);
+        await authClient.signUp.email({
+          name: name.trim(),
+          email: email.trim().toLowerCase(),
+          password,
+          callbackURL:
+            accountType === "teacher"
+              ? "/teacher/dashboard"
+              : "/dashboard",
+        });
 
       if (signupError) {
         setError(
@@ -73,13 +71,38 @@ export default function SignupForm() {
         return;
       }
 
-      if (accountType === "teacher") {
-     router.replace("/teacher-pending" as any);
-        router.refresh();
+      // Save the selected role through the server
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_AUTH_URL}/api/account/role`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            role: accountType,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        setError(
+          result.error || "Account created, but role assignment failed."
+        );
         return;
       }
 
-      router.replace("/dashboard");
+      await authClient.getSession();
+
+      router.replace(
+        accountType === "teacher"
+          ? "/teacher/dashboard"
+          : "/dashboard"
+      );
+
       router.refresh();
     } catch (err) {
       console.error("Signup error:", err);
@@ -140,9 +163,8 @@ export default function SignupForm() {
           </div>
 
           {accountType === "teacher" && (
-            <p className="mt-2 rounded-lg bg-amber-50 p-3 text-xs text-amber-700">
-              Teacher registration requires administrator approval.
-              Your account will remain pending until approved.
+            <p className="mt-2 rounded-lg bg-blue-50 p-3 text-xs text-blue-700">
+              You can register directly as a teacher.
             </p>
           )}
         </div>
@@ -157,7 +179,6 @@ export default function SignupForm() {
 
           <input
             id="signup-name"
-            name="fullName"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -179,7 +200,6 @@ export default function SignupForm() {
 
           <input
             id="signup-email"
-            name="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -202,7 +222,6 @@ export default function SignupForm() {
           <div className="relative">
             <input
               id="signup-password"
-              name="newPassword"
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -235,7 +254,6 @@ export default function SignupForm() {
           <div className="relative">
             <input
               id="signup-confirm-password"
-              name="confirmPassword"
               type={showConfirmPassword ? "text" : "password"}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}

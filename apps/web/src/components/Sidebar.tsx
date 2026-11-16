@@ -85,33 +85,29 @@ export default function Sidebar() {
 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  // Get current Better Auth session
+  const { data: session, isPending } = authClient.useSession();
 
-// Get current Better Auth session
-const { data: session, isPending } = authClient.useSession();
+  // Get logged-in user's role
+  const userRole = (
+    session?.user as unknown as { role?: string } | undefined
+  )?.role;
 
-// Get logged-in user's role
-const userRole = (
-  session?.user as unknown as { role?: string } | undefined
-)?.role;
+  // Normalize role
+  const normalizedRole = userRole?.toLowerCase();
 
-// Debugging: check the role returned by Better Auth
-console.log("[Sidebar] Session loading:", isPending);
-console.log("[Sidebar] Current user role:", userRole);
+  console.log("[Sidebar] Session loading:", isPending);
+  console.log("[Sidebar] Current user role:", normalizedRole);
 
-// Normalize role
-const normalizedRole = userRole?.toLowerCase();
+  // Wait until session loads
+  if (isPending) {
+    return null;
+  }
 
-const isTeacherRoute =
-  pathname === "/teacher" ||
-  pathname.startsWith("/teacher/");
-
-if (isPending) {
-  return null;
-}
-
-if (isTeacherRoute || normalizedRole === "teacher") {
-  return <TeacherSidebar />;
-}
+  // Show teacher sidebar for teacher accounts
+  if (normalizedRole === "teacher") {
+    return <TeacherSidebar />;
+  }
 
   // Get logged-in user's information
   const userName =
