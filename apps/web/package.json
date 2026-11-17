@@ -26,6 +26,7 @@
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "redis": "^6.3.1",
     "sonner": "catalog:",
     "varlock": "catalog:",
     "zod": "catalog:"

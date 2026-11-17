@@ -11,22 +11,12 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 
-import { redis } from "./redis";
+import { connectRedis } from "./redis";
 import { createContext } from "./context";
 import { ENV } from "./env.server";
 import { auth, db } from "./services";
 
 const app = new Hono();
-
-// Test Redis connection
-redis
-  .ping()
-  .then((result) => {
-    console.log("Redis connection:", result);
-  })
-  .catch((error) => {
-    console.error("Redis ping failed:", error);
-  });
 
 app.use(logger());
 
@@ -159,5 +149,8 @@ app.use("/*", async (c, next) => {
 app.get("/", (c) => {
   return c.text("OK");
 });
+
+// Connect Redis before exporting the application
+await connectRedis();
 
 export default app;
