@@ -7,6 +7,7 @@ import { course } from "./course";
 export const studentProfile = pgTable("student_profile", {
 id: text("id").primaryKey(),
 userId: text("user_id").notNull().unique().references(() => user.id, { onDelete: "cascade" }),
+
 phone: text("phone"),
 dateOfBirth: date("date_of_birth"),
 gender: text("gender"),
@@ -72,3 +73,4 @@ progressPercentage: integer("progress_percentage").default(0).notNull(),
 lastAccessedAt: timestamp("last_accessed_at"),
 updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+  
