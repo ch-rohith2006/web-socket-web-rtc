@@ -4,8 +4,10 @@ import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";
 import { RPCHandler } from "@orpc/server/fetch";
 import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
+
 import { appRouter } from "@web-socket-web-rtc/api/routers/index";
 import { user } from "@web-socket-web-rtc/db/schema/auth";
+
 import { eq } from "drizzle-orm";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -15,6 +17,7 @@ import { connectRedis } from "./redis";
 import { createContext } from "./context";
 import { ENV } from "./env.server";
 import { auth, db } from "./services";
+import { engine } from "./websocket/socket";
 
 const app = new Hono();
 
@@ -146,11 +149,31 @@ app.use("/*", async (c, next) => {
   await next();
 });
 
+// Health check
 app.get("/", (c) => {
   return c.text("OK");
 });
 
-// Connect Redis before exporting the application
+// Connect Redis before starting the server
 await connectRedis();
 
-export default app;
+// Initialize Bun WebSocket handler
+const { websocket } = engine.handler();
+
+// Start Hono and Socket.IO on the same Bun server
+export default {
+  port: 3000,
+  idleTimeout: 30,
+
+   fetch(req: Request, server: Bun.Server<unknown>) {
+    const url = new URL(req.url);
+
+    if (url.pathname.startsWith("/socket.io/")) {
+      return engine.handleRequest(req, server);
+    }
+
+    return app.fetch(req, server);
+  },
+
+  websocket,
+};

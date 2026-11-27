@@ -49,7 +49,11 @@
     "auth:generate": "cd apps/server && bun run auth:generate"
   },
   "dependencies": {
+    "livekit-client": "^2.25.0",
+    "livekit-server-sdk": "^2.20.1",
     "lucide-react": "catalog:",
+    "socket.io": "^4.8.4",
+    "socket.io-client": "^4.8.4",
     "zod": "catalog:"
   },
   "devDependencies": {
